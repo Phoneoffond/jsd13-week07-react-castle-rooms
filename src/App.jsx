@@ -18,6 +18,10 @@ export default function App() {
     console.log(e);
     setQuestion(e.target.value);
   };
+   const handleAnswer = (e) => {
+    console.log(e);
+    setAnswer(e.target.value);
+  };
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-800 text-white pb-80 py-10 gap-y-4">
     <p className = "text-purple-300">
@@ -31,9 +35,8 @@ export default function App() {
     className = "bg-white text-black rounded px-2 py-1"
     placeholder="Type your message here..."
     />
-          <Castle apple = {question}/>
-          {question}
-          {answer}
+          <Castle question = {question} answer={answer} handleAnswer={handleAnswer}/>
+
       </div>
   );
 }
