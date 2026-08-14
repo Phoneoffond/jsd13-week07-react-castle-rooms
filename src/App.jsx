@@ -13,16 +13,15 @@ import SecretRoom from "./components/09_SecretRoom.jsx";
 export default function App() {
 
   const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState("How are you?");
   const handleQuestion = (e) => {
     console.log(e);
     setQuestion(e.target.value);
-
   };
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-800 text-white pb-80 py-10 gap-y-4">
     <p className = "text-purple-300">
-      Message for Secret Room:
+      Message for Secret Room:{""}
       <span className="text-yellow-300">
         {question ? ` ${question}` : "⏳Waiting for a message.."}
         </span>
@@ -32,7 +31,7 @@ export default function App() {
     className = "bg-white text-black rounded px-2 py-1"
     placeholder="Type your message here..."
     />
-          <Castle question = {question}/>
+          <Castle apple = {question}/>
           {question}
           {answer}
       </div>

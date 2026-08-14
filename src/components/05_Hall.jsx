@@ -1,8 +1,9 @@
+import Corridor from "./06_Corridor";
 export default function Hall(){
 return(
     <div className = "flex flex-col justify-center items-center pt-10 bg-green-800 w-full">
     <h1>Hall</h1>
-
+    <Corridor/>
 </div>
 
 
