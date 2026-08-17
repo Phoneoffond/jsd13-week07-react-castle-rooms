@@ -1,49 +1,163 @@
-import {useState} from "react";
+import { useState, useEffect } from "react";
 import Castle from "./components/01_Castle.jsx";
-import Tower from "./components/02_Tower.jsx";
-import Chamber from "./components/03_Chamber.jsx";
-import Room from "./components/04_Room.jsx";
-import Hall from "./components/05_Hall.jsx";
-import Corridor from "./components/06_Corridor.jsx";
-import Gallery from "./components/07_Gallery.jsx";
-import Nook from "./components/08_Nook.jsx";
-import SecretRoom from "./components/09_SecretRoom.jsx";
 
+
+const pokemonTeam = [
+  "pikachu",
+  "bulbasaur",
+  "charmander",
+  "squirtle",
+];
 
 export default function App() {
-
+  // =========================
+  // Message
+  // =========================
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const handleQuestion = (e) => {
-    console.log(e);
     setQuestion(e.target.value);
   };
-   const handleAnswer = (e) => {
-    console.log(e);
+
+  const handleAnswer = (e) => {
     setAnswer(e.target.value);
   };
+
+  // =========================
+  // Pokemon
+  // =========================
+  const [pokemonName, setPokemonName] = useState("pikachu");
+  const [pokemon, setPokemon] = useState(null);
+  const [prisoner, setPrisoner] = useState(null);
+  useEffect(() => {
+    async function fetchPokemon() {
+      try {
+        // Pokemon หลัก
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
+        );
+
+        const data = await response.json();
+
+        // Pokemon แบบสุ่ม
+        const randomID = Math.floor(Math.random() * 1025) + 1;
+
+        const randomResponse = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${randomID}`
+        );
+
+        const randomData = await randomResponse.json();
+
+        console.log("Pokemon หลัก:", data);
+        console.log("Pokemon สุ่ม:", randomData);
+
+        // แสดง Pokemon หลัก
+        setPokemon(data);
+      } catch (error) {
+        console.error("Error fetching Pokemon:", error);
+      }
+    }
+
+    fetchPokemon();
+  }, [pokemonName]);
+
+   useEffect(() => {
+    async function fetchRandomPokemon() {
+      try {
+        // สุ่มเลข Pokemon 1 - 1025
+        const randomID = Math.floor(Math.random() * 1025) + 1;
+
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${randomID}`
+        );
+
+        const data = await response.json();
+
+        setPrisoner(data);
+      } catch (error) {
+        console.error("Error fetching Pokemon:", error);
+      }
+    }
+
+    fetchRandomPokemon();
+  }, []);
+
+  // =========================
+  // UI
+  // =========================
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-800 text-white pb-80 py-10 gap-y-4">
-    <p className = "text-purple-300">
-      Message for Secret Room:{""}
-      <span className="text-yellow-300">
-        {question ? ` ${question}` : "Waiting for a message.."}
-        </span>
-    </p>
-     <p className = "text-green-300">
-      Reply from Secret Room:{""}
-      <span className="text-yellow-300">
-        {answer ? ` ${answer}` : "Waiting for a message.."}
-        </span>
-    </p>
-    <textarea 
-    value= {question} 
-    onChange= {handleQuestion}
-    className = "bg-white text-black rounded px-2 py-1"
-    placeholder="Type your message here..."
-    />
-    <Castle question = {question} answer={answer} handleAnswer={handleAnswer}/>
+    <div className="min-h-screen bg-gray-800 text-white">
+
+      {/* Outside the Castle */}
+      <div className="flex flex-col items-center pt-10 gap-y-4">
+
+        {/* Title */}
+        <h1 className="text-yellow-400 text-2xl font-bold">
+          Outside the Castle
+        </h1>
+
+        {/* Pokemon outside */}
+        <p className="text-gray-400">
+          Pokemon outside:
+        </p>
+
+        {/* Pokemon */}
+        {pokemon && (
+          <div className="flex flex-col items-center">
+
+            <img
+              className="w-20 h-20"
+              src={pokemon.sprites.front_default}
+              alt={pokemon.name}
+            />
+
+            <p className="text-sm capitalize">
+              {pokemon.name}
+            </p>
+
+          </div>
+        )}
+
+        {/* Message to Secret Room */}
+        <p className="text-purple-300 mt-4">
+          Message to the Secret Room:{" "}
+          <span className="text-yellow-400">
+            {question
+              ? question
+              : "Waiting..."}
+          </span>
+        </p>
+
+        {/* Textarea */}
+        <textarea
+          className="bg-white text-black rounded px-2 py-1"
+          placeholder="Type your message here..."
+          value={question}
+          onChange={handleQuestion}
+        />
+
+        {/* Reply */}
+        <p className="text-green-400">
+          Reply from the Secret Room:{" "}
+          <span className="text-yellow-400">
+            {answer
+              ? answer
+              : "Waiting for a reply..."}
+          </span>
+        </p>
+
+       
+
+        {/* Castle Component */}
+        <Castle
+          question={question}
+          answer={answer}
+          handleAnswer={handleAnswer}
+          prisoner={prisoner}
+        />
 
       </div>
+
+    </div>
   );
 }
